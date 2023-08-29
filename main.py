@@ -1,16 +1,71 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+"""
+Создайте класс Матрица. Добавьте методы для: - вывода на печать,
+сравнения, сложения, умножения матриц
+"""
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+class Matrix:
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols
+        self.data = [[0] * cols for _ in range(rows)]
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    def __str__(self):
+        matrix_str = ""
+        for row in self.data:
+            matrix_str += " ".join(map(str, row)) + "\n"
+        return matrix_str
+
+    def __eq__(self, other):
+        if isinstance(other, Matrix):
+            return self.data == other.data
+        else:
+            return False
+
+    def __add__(self, other):
+        if isinstance(other, Matrix):
+            if self.rows == other.rows and self.cols == other.cols:
+                result = Matrix(self.rows, self.cols)
+                for i in range(self.rows):
+                    for j in range(self.cols):
+                        result.data[i][j] = self.data[i][j] + other.data[i][j]
+                return result
+            else:
+                raise ValueError("Матрицы должны иметь одинаковое количество строк и столбцов")
+        else:
+            raise ValueError("Второй объект не матрица")
+
+    def __mul__(self, other):
+        if isinstance(other, Matrix):
+            if self.cols == other.rows:
+                result = Matrix(self.rows, other.cols)
+                for i in range(self.rows):
+                    for j in range(other.cols):
+                        dot_product = 0
+                        for k in range(self.cols):
+                            dot_product += self.data[i][k] * other.data[k][j]
+                        result.data[i][j] = dot_product
+                return result
+            else:
+                raise ValueError("Число столбцов первой матрицы должно быть равно числу строк второй матрицы")
+        else:
+            raise ValueError("Второй объект не матрица")
+
+
+m1 = Matrix(2, 2)
+m1.data = [[1, 2], [3, 4]]
+
+m2 = Matrix(2, 2)
+# m2.data = [[1, 2], [3, 4]]
+m2.data = [[5, 6], [7, 8]]
+
+print(m1)
+print(m2)
+
+print(m1 == m2)
+
+m3 = m1 + m2
+print(m3)
+
+m4 = m1 * m2
+print(m4)
